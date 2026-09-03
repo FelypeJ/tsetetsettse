@@ -3,374 +3,424 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#050509" />
-  <title>NEXUS — Beyond The Future</title>
+  <meta name="theme-color" content="#05060a" />
+  <meta
+    name="description"
+    content="NEXUS — uma experiência digital futurista e interativa."
+  />
+
+  <title>NEXUS — Digital Experience</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-
-  <!-- CURSOR -->
-  <div class="cursor"></div>
+  <!-- Cursor -->
+  <div class="cursor-dot"></div>
   <div class="cursor-ring"></div>
 
-  <!-- BACKGROUND -->
-  <div class="noise"></div>
-  <div class="aurora aurora-1"></div>
-  <div class="aurora aurora-2"></div>
-  <canvas id="particles"></canvas>
+  <!-- Background -->
+  <div class="background">
+    <div class="noise"></div>
+    <div class="aurora aurora-1"></div>
+    <div class="aurora aurora-2"></div>
+    <div class="aurora aurora-3"></div>
 
-  <!-- LOADER -->
-  <div id="loader">
-    <div class="loader-logo">NEXUS</div>
-    <div class="loader-line">
-      <span></span>
-    </div>
-    <div class="loader-percent">0%</div>
+    <div class="grid"></div>
+    <canvas id="particles"></canvas>
   </div>
 
-  <!-- NAVBAR -->
-  <header class="navbar">
-    <a href="#home" class="logo magnetic">NEXUS<span>.</span></a>
+  <!-- Loader -->
+  <div class="loader" id="loader">
+    <div class="loader-content">
+      <div class="loader-logo">N<span>/</span>X</div>
 
-    <nav>
-      <a href="#home" class="nav-link active">INÍCIO</a>
-      <a href="#experience" class="nav-link">EXPERIÊNCIA</a>
-      <a href="#technology" class="nav-link">TECNOLOGIA</a>
-      <a href="#contact" class="nav-link">CONTATO</a>
+      <div class="loader-line">
+        <span id="loader-progress"></span>
+      </div>
+
+      <p>INITIALIZING EXPERIENCE</p>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <header class="navbar" id="navbar">
+    <a href="#home" class="logo magnetic">
+      N<span>/</span>X
+    </a>
+
+    <nav class="nav-links" id="nav-links">
+      <a href="#home" class="nav-link active">01 / HOME</a>
+      <a href="#about" class="nav-link">02 / ABOUT</a>
+      <a href="#projects" class="nav-link">03 / PROJECTS</a>
+      <a href="#contact" class="nav-link">04 / CONTACT</a>
     </nav>
 
-    <button class="menu-button magnetic" aria-label="Abrir menu">
+    <button class="menu-toggle magnetic" id="menu-toggle" aria-label="Abrir menu">
       <span></span>
       <span></span>
     </button>
   </header>
 
-  <!-- HERO -->
   <main>
+    <!-- HERO -->
+    <section class="hero section" id="home">
+      <div class="hero-orbit orbit-1"></div>
+      <div class="hero-orbit orbit-2"></div>
 
-    <section id="home" class="hero section">
-
-      <div class="hero-grid"></div>
-
-      <div class="hero-content reveal">
-        <div class="eyebrow">
+      <div class="hero-content">
+        <div class="eyebrow reveal">
           <span class="status-dot"></span>
-          SYSTEM ONLINE
+          DIGITAL SYSTEM / 2026
         </div>
 
-        <h1>
-          BEYOND
-          <span>THE</span>
-          <strong>FUTURE</strong>
+        <h1 class="hero-title">
+          <span class="title-line reveal">DESIGN</span>
+
+          <span class="title-line title-outline reveal">
+            BEYOND
+          </span>
+
+          <span class="title-line reveal">
+            <span class="gradient-text">LIMITS.</span>
+          </span>
         </h1>
 
-        <p>
-          Uma experiência digital construída para ultrapassar
-          os limites entre tecnologia, design e imaginação.
-        </p>
+        <div class="hero-bottom reveal">
+          <p>
+            Uma experiência digital construída para transformar
+            tecnologia, movimento e design em uma única linguagem.
+          </p>
 
-        <div class="hero-actions">
-          <a href="#experience" class="primary-button magnetic">
-            <span>EXPLORE</span>
-            <i>↗</i>
-          </a>
-
-          <a href="#technology" class="text-button">
-            Descobrir mais
-            <span>↓</span>
+          <a href="#projects" class="primary-button magnetic">
+            <span>EXPLORE SYSTEM</span>
+            <span class="button-arrow">↗</span>
           </a>
         </div>
       </div>
 
-      <div class="hero-orb">
-        <div class="orb-core"></div>
-        <div class="orb-ring ring-a"></div>
-        <div class="orb-ring ring-b"></div>
-        <div class="orb-ring ring-c"></div>
-      </div>
-
-      <div class="hero-scroll">
+      <div class="hero-side">
         <span>SCROLL TO EXPLORE</span>
         <div class="scroll-line"></div>
       </div>
 
-      <div class="hero-counter">
-        <span>01</span>
-        <small>/ 04</small>
+      <div class="hero-coordinate">
+        <span>45° 12' 08.4"</span>
+        <span>90° 34' 22.1"</span>
       </div>
-
     </section>
 
     <!-- MARQUEE -->
     <section class="marquee-section">
       <div class="marquee">
-        <span>CREATE</span>
-        <b>✦</b>
-        <span>IMAGINE</span>
-        <b>✦</b>
-        <span>BUILD</span>
-        <b>✦</b>
-        <span>EVOLVE</span>
-        <b>✦</b>
-        <span>CREATE</span>
-        <b>✦</b>
-        <span>IMAGINE</span>
-        <b>✦</b>
+        <div class="marquee-track">
+          <span>CREATE</span>
+          <i>✦</i>
+          <span>IMAGINE</span>
+          <i>✦</i>
+          <span>BUILD</span>
+          <i>✦</i>
+          <span>EXPERIENCE</span>
+          <i>✦</i>
+
+          <span>CREATE</span>
+          <i>✦</i>
+          <span>IMAGINE</span>
+          <i>✦</i>
+          <span>BUILD</span>
+          <i>✦</i>
+          <span>EXPERIENCE</span>
+          <i>✦</i>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about section" id="about">
+      <div class="section-header reveal">
+        <span class="section-number">02</span>
+
+        <div>
+          <span class="section-label">ABOUT THE SYSTEM</span>
+          <h2>
+            WHERE <span>IDEAS</span><br />
+            BECOME <em>REAL.</em>
+          </h2>
+        </div>
+      </div>
+
+      <div class="about-layout">
+        <div class="about-intro reveal">
+          <span class="big-number">01</span>
+
+          <p>
+            NEXUS é uma visão de como experiências digitais podem
+            ultrapassar a interface tradicional.
+          </p>
+        </div>
+
+        <div class="about-copy reveal">
+          <p class="large-copy">
+            Não criamos apenas páginas.
+            <strong>Criamos atmosferas.</strong>
+          </p>
+
+          <p>
+            Cada detalhe é pensado para responder ao movimento,
+            ao tempo e à interação. O objetivo é transformar uma
+            simples visita em uma experiência memorável.
+          </p>
+
+          <div class="about-tags">
+            <span>CREATIVE</span>
+            <span>INTERACTIVE</span>
+            <span>IMMERSIVE</span>
+            <span>FUTURE</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats-section">
+      <div class="stats-grid">
+        <div class="stat reveal">
+          <span class="stat-number" data-count="98">0</span>
+          <span class="stat-symbol">%</span>
+          <p>IMPACT</p>
+        </div>
+
+        <div class="stat reveal">
+          <span class="stat-number" data-count="24">0</span>
+          <span class="stat-symbol">+</span>
+          <p>EXPERIMENTS</p>
+        </div>
+
+        <div class="stat reveal">
+          <span class="stat-number" data-count="12">0</span>
+          <span class="stat-symbol">K</span>
+          <p>LINES OF CODE</p>
+        </div>
+
+        <div class="stat reveal">
+          <span class="stat-number" data-count="100">0</span>
+          <span class="stat-symbol">%</span>
+          <p>ENERGY</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section class="projects section" id="projects">
+      <div class="section-header reveal">
+        <span class="section-number">03</span>
+
+        <div>
+          <span class="section-label">SELECTED WORK</span>
+          <h2>
+            DIGITAL<br />
+            <em>MATTER.</em>
+          </h2>
+        </div>
+      </div>
+
+      <div class="projects-grid">
+        <article class="project-card project-large reveal tilt-card">
+          <div class="project-image project-image-1">
+            <div class="project-glow"></div>
+            <span class="project-orb"></span>
+          </div>
+
+          <div class="project-info">
+            <div>
+              <span>01 / IMMERSIVE</span>
+              <h3>VOID</h3>
+            </div>
+
+            <span class="project-arrow">↗</span>
+          </div>
+        </article>
+
+        <article class="project-card reveal tilt-card">
+          <div class="project-image project-image-2">
+            <div class="rings">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+
+          <div class="project-info">
+            <div>
+              <span>02 / DIGITAL</span>
+              <h3>ORBIT</h3>
+            </div>
+
+            <span class="project-arrow">↗</span>
+          </div>
+        </article>
+
+        <article class="project-card reveal tilt-card">
+          <div class="project-image project-image-3">
+            <div class="cube">
+              <span></span>
+            </div>
+          </div>
+
+          <div class="project-info">
+            <div>
+              <span>03 / FUTURE</span>
+              <h3>CORE</h3>
+            </div>
+
+            <span class="project-arrow">↗</span>
+          </div>
+        </article>
       </div>
     </section>
 
     <!-- EXPERIENCE -->
-    <section id="experience" class="experience section">
-
-      <div class="section-heading reveal">
-        <span class="section-number">01 / EXPERIENCE</span>
-
-        <h2>
-          DESIGNING
-          <em>THE</em>
-          <span>UNKNOWN.</span>
-        </h2>
-
-        <p>
-          Cada detalhe foi pensado para transformar uma simples
-          página em uma experiência digital imersiva.
-        </p>
-      </div>
-
-      <div class="cards">
-
-        <article class="feature-card tilt reveal">
-          <div class="card-number">01</div>
-          <div class="card-icon">◈</div>
-          <h3>IMMERSIVE</h3>
-          <p>
-            Profundidade, movimento e luz trabalhando juntos
-            para criar uma interface viva.
-          </p>
-          <div class="card-line"></div>
-          <span class="card-arrow">↗</span>
-        </article>
-
-        <article class="feature-card tilt reveal">
-          <div class="card-number">02</div>
-          <div class="card-icon">✦</div>
-          <h3>INTELLIGENT</h3>
-          <p>
-            Interações que respondem ao usuário e transformam
-            cada movimento em parte da experiência.
-          </p>
-          <div class="card-line"></div>
-          <span class="card-arrow">↗</span>
-        </article>
-
-        <article class="feature-card tilt reveal">
-          <div class="card-number">03</div>
-          <div class="card-icon">∞</div>
-          <h3>LIMITLESS</h3>
-          <p>
-            Uma linguagem visual preparada para crescer,
-            evoluir e se adaptar a novas ideias.
-          </p>
-          <div class="card-line"></div>
-          <span class="card-arrow">↗</span>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- BIG STATEMENT -->
-    <section class="statement section">
-      <div class="statement-bg"></div>
-
-      <div class="statement-content reveal">
-        <span>THE NEXT DIGITAL ERA</span>
+    <section class="experience section">
+      <div class="experience-sticky">
+        <span class="section-label">THE PROCESS</span>
 
         <h2>
-          DON'T FOLLOW
-          <br />
-          <i>THE FUTURE.</i>
-          <br />
-          CREATE IT.
-        </h2>
-
-        <div class="statement-orbit">
-          <div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TECHNOLOGY -->
-    <section id="technology" class="technology section">
-
-      <div class="section-heading reveal">
-        <span class="section-number">02 / TECHNOLOGY</span>
-
-        <h2>
-          BUILT FOR
-          <span>MOTION.</span>
+          FROM<br />
+          <span>CONCEPT</span><br />
+          TO <em>REALITY.</em>
         </h2>
       </div>
 
-      <div class="tech-layout">
-
-        <div class="tech-visual reveal">
-          <div class="tech-circle">
-            <div class="tech-circle-inner">
-              <span>N</span>
-            </div>
-          </div>
-
-          <div class="tech-data data-1">01.4829</div>
-          <div class="tech-data data-2">98.42%</div>
-          <div class="tech-data data-3">∞ ACTIVE</div>
-        </div>
-
-        <div class="tech-list">
-
-          <div class="tech-item reveal">
-            <span>01</span>
-            <div>
-              <h3>ADAPTIVE MOTION</h3>
-              <p>Movimentos suaves que respondem ao scroll e ao cursor.</p>
-            </div>
-            <strong>+</strong>
-          </div>
-
-          <div class="tech-item reveal">
-            <span>02</span>
-            <div>
-              <h3>DEPTH SYSTEM</h3>
-              <p>Camadas independentes criam uma sensação de profundidade.</p>
-            </div>
-            <strong>+</strong>
-          </div>
-
-          <div class="tech-item reveal">
-            <span>03</span>
-            <div>
-              <h3>REAL-TIME UI</h3>
-              <p>Elementos visuais reagem instantaneamente à interação.</p>
-            </div>
-            <strong>+</strong>
-          </div>
-
-          <div class="tech-item reveal">
-            <span>04</span>
-            <div>
-              <h3>RESPONSIVE CORE</h3>
-              <p>Uma experiência construída para desktop, tablet e mobile.</p>
-            </div>
-            <strong>+</strong>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- GALLERY -->
-    <section class="gallery section">
-
-      <div class="gallery-header reveal">
-        <span>03 / VISUAL SYSTEM</span>
-        <h2>ANOTHER<br /><i>DIMENSION.</i></h2>
-      </div>
-
-      <div class="gallery-grid">
-
-        <div class="gallery-card large reveal">
-          <div class="gallery-glow"></div>
+      <div class="process">
+        <div class="process-item reveal">
           <span>01</span>
-          <h3>VOID</h3>
+
+          <div>
+            <h3>DISCOVER</h3>
+            <p>
+              Entendemos o problema, o público e a atmosfera que
+              queremos criar.
+            </p>
+          </div>
         </div>
 
-        <div class="gallery-card reveal">
-          <div class="gallery-glow purple"></div>
+        <div class="process-item reveal">
           <span>02</span>
-          <h3>NEON</h3>
+
+          <div>
+            <h3>DESIGN</h3>
+            <p>
+              Transformamos conceitos abstratos em sistemas visuais
+              consistentes e interativos.
+            </p>
+          </div>
         </div>
 
-        <div class="gallery-card reveal">
-          <div class="gallery-glow blue"></div>
+        <div class="process-item reveal">
           <span>03</span>
-          <h3>CORE</h3>
+
+          <div>
+            <h3>BUILD</h3>
+            <p>
+              Desenvolvemos cada interação pensando em performance,
+              fluidez e responsividade.
+            </p>
+          </div>
         </div>
 
-        <div class="gallery-card wide reveal">
-          <div class="gallery-glow pink"></div>
+        <div class="process-item reveal">
           <span>04</span>
-          <h3>INFINITY</h3>
-        </div>
 
+          <div>
+            <h3>LAUNCH</h3>
+            <p>
+              O resultado é uma experiência pronta para sair da tela
+              e encontrar pessoas.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- CONTACT -->
-    <section id="contact" class="contact section">
+    <section class="contact section" id="contact">
+      <div class="contact-orb"></div>
 
-      <div class="contact-content reveal">
+      <div class="contact-content">
+        <span class="section-label reveal">READY?</span>
 
-        <span class="section-number">04 / CONTACT</span>
-
-        <h2>
-          LET'S BUILD
-          <br />
-          <i>SOMETHING</i>
-          <br />
-          IMPOSSIBLE.
+        <h2 class="reveal">
+          LET'S CREATE<br />
+          <span>SOMETHING</span><br />
+          <em>UNEXPECTED.</em>
         </h2>
 
-        <a href="mailto:hello@nexus.digital" class="contact-button magnetic">
-          <span>START A PROJECT</span>
-          <strong>↗</strong>
+        <a
+          href="mailto:hello@nexus.digital"
+          class="contact-button magnetic reveal"
+        >
+          <span>START A CONVERSATION</span>
+          <span>↗</span>
         </a>
-
       </div>
-
-      <div class="contact-orbit"></div>
     </section>
-
   </main>
 
-  <!-- FOOTER -->
+  <!-- Footer -->
   <footer>
-    <div>NEXUS<span>.</span></div>
-    <p>© 2026 — DIGITAL FUTURES</p>
-    <p>DESIGNED BEYOND LIMITS</p>
+    <div class="footer-logo">N<span>/</span>X</div>
+
+    <p>© 2026 NEXUS DIGITAL SYSTEM</p>
+
+    <div class="footer-links">
+      <a href="#home">TOP ↑</a>
+      <a href="#about">ABOUT</a>
+      <a href="#projects">WORK</a>
+    </div>
   </footer>
 
-  <!-- MUSIC PLAYER -->
-  <div class="music-player">
-
-    <button id="musicButton" class="music-button magnetic" aria-label="Tocar música">
-      <span class="music-icon">♫</span>
+  <!-- Music -->
+  <div class="music-player" id="music-player">
+    <button
+      class="music-toggle magnetic"
+      id="music-toggle"
+      aria-label="Ativar música"
+    >
+      <span class="music-icon">
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+      </span>
     </button>
 
     <div class="music-info">
-      <span class="music-label">ATMOSPHERE</span>
-      <strong>NEON DREAMS</strong>
+      <span>ATMOSPHERE</span>
+      <small>AMBIENT SYSTEM</small>
     </div>
 
-    <div class="music-bars">
-      <i></i>
-      <i></i>
-      <i></i>
-      <i></i>
-      <i></i>
-    </div>
-
-    <audio id="music" loop>
-      <!--
-        Coloque sua música em:
-        assets/music/ambient.mp3
-
-        e mantenha este caminho:
-      -->
-      <source src="assets/music/ambient.mp3" type="audio/mpeg">
-    </audio>
-
+    <input
+      type="range"
+      id="volume"
+      min="0"
+      max="1"
+      step="0.01"
+      value="0.35"
+      aria-label="Volume"
+    />
   </div>
+
+  <!-- Audio local -->
+  <audio id="ambient-audio" loop preload="none">
+    <source src="assets/music/ambient.mp3" type="audio/mpeg" />
+  </audio>
 
   <script src="script.js"></script>
 </body>

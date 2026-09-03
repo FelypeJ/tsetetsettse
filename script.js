@@ -1,528 +1,473 @@
-/* =========================================================
-   NEXUS — INTERACTIVE ENGINE
-========================================================= */
+"use strict";
 
-const $ = (selector) => document.querySelector(selector);
-const $$ = (selector) => document.querySelectorAll(selector);
+/* =========================================
+   NEXUS DIGITAL EXPERIENCE
+   Vanilla JS / Performance-oriented
+========================================= */
 
+document.addEventListener("DOMContentLoaded", () => {
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
 
-/* =========================================================
-   LOADER
-========================================================= */
+  /* -----------------------------------------
+     HELPERS
+  ----------------------------------------- */
 
-const loader = $('#loader');
-const loaderLine = $('.loader-line span');
-const loaderPercent = $('.loader-percent');
+  const $ = (selector, parent = document) =>
+    parent.querySelector(selector);
 
-let progress = 0;
+  const $$ = (selector, parent = document) =>
+    [...parent.querySelectorAll(selector)];
 
-const loaderInterval = setInterval(() => {
+  /* -----------------------------------------
+     LOADER
+  ----------------------------------------- */
 
-  progress += Math.floor(Math.random() * 7) + 1;
+  const loader = $("#loader");
+  const loaderProgress = $("#loader-progress");
 
-  if (progress >= 100) {
+  let progress = 0;
+
+  const loaderInterval = setInterval(() => {
+    progress += Math.random() * 12;
+
+    if (progress >= 100) {
+      progress = 100;
+      clearInterval(loaderInterval);
+
+      setTimeout(() => {
+        loader?.classList.add("hidden");
+      }, 300);
+    }
+
+    if (loaderProgress) {
+      loaderProgress.style.width = `${progress}%`;
+    }
+  }, 90);
+
+  window.addEventListener("load", () => {
     progress = 100;
-    clearInterval(loaderInterval);
+
+    if (loaderProgress) {
+      loaderProgress.style.width = "100%";
+    }
 
     setTimeout(() => {
-      loader.classList.add('hide');
-    }, 450);
-  }
-
-  loaderLine.style.width = `${progress}%`;
-  loaderPercent.textContent = `${progress}%`;
-
-}, 45);
-
-
-/* =========================================================
-   CUSTOM CURSOR
-========================================================= */
-
-const cursor = $('.cursor');
-const cursorRing = $('.cursor-ring');
-
-let mouseX = 0;
-let mouseY = 0;
-let ringX = 0;
-let ringY = 0;
-
-window.addEventListener('mousemove', (event) => {
-
-  mouseX = event.clientX;
-  mouseY = event.clientY;
-
-  cursor.style.left = `${mouseX}px`;
-  cursor.style.top = `${mouseY}px`;
-});
-
-function animateCursor() {
-
-  ringX += (mouseX - ringX) * 0.13;
-  ringY += (mouseY - ringY) * 0.13;
-
-  cursorRing.style.left = `${ringX}px`;
-  cursorRing.style.top = `${ringY}px`;
-
-  requestAnimationFrame(animateCursor);
-}
-
-animateCursor();
-
-
-/* =========================================================
-   CURSOR HOVER
-========================================================= */
-
-const interactiveElements = $$(
-  'a, button, .feature-card, .gallery-card, .tech-item'
-);
-
-interactiveElements.forEach((element) => {
-
-  element.addEventListener('mouseenter', () => {
-    cursorRing.classList.add('hover');
+      loader?.classList.add("hidden");
+    }, 500);
   });
 
-  element.addEventListener('mouseleave', () => {
-    cursorRing.classList.remove('hover');
+  /* -----------------------------------------
+     NAVBAR
+  ----------------------------------------- */
+
+  const navbar = $("#navbar");
+
+  const updateNavbar = () => {
+    if (!navbar) return;
+
+    navbar.classList.toggle("scrolled", window.scrollY > 40);
+  };
+
+  window.addEventListener(
+    "scroll",
+    updateNavbar,
+    { passive: true }
+  );
+
+  updateNavbar();
+
+  /* -----------------------------------------
+     MOBILE MENU
+  ----------------------------------------- */
+
+  const menuToggle = $("#menu-toggle");
+  const navLinks = $("#nav-links");
+
+  const closeMenu = () => {
+    navLinks?.classList.remove("open");
+    document.body.classList.remove("menu-open");
+  };
+
+  menuToggle?.addEventListener("click", () => {
+    navLinks?.classList.toggle("open");
+    document.body.classList.toggle("menu-open");
   });
 
-});
-
-
-/* =========================================================
-   MAGNETIC BUTTONS
-========================================================= */
-
-$$('.magnetic').forEach((element) => {
-
-  element.addEventListener('mousemove', (event) => {
-
-    const rect = element.getBoundingClientRect();
-
-    const x = event.clientX - rect.left - rect.width / 2;
-    const y = event.clientY - rect.top - rect.height / 2;
-
-    element.style.transform =
-      `translate(${x * 0.18}px, ${y * 0.18}px)`;
+  $$(".nav-link").forEach((link) => {
+    link.addEventListener("click", closeMenu);
   });
 
-  element.addEventListener('mouseleave', () => {
-    element.style.transform = '';
-  });
+  /* -----------------------------------------
+     SMOOTH LINKS
+  ----------------------------------------- */
 
-});
+  $$('a[href^="#"]').forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const targetId = link.getAttribute("href");
 
+      if (!targetId || targetId === "#") return;
 
-/* =========================================================
-   3D TILT
-========================================================= */
+      const target = $(targetId);
 
-$$('.tilt').forEach((card) => {
+      if (!target) return;
 
-  card.addEventListener('mousemove', (event) => {
+      event.preventDefault();
 
-    const rect = card.getBoundingClientRect();
-
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rotateX = ((y - centerY) / centerY) * -7;
-    const rotateY = ((x - centerX) / centerX) * 7;
-
-    card.style.transform =
-      `perspective(900px)
-       rotateX(${rotateX}deg)
-       rotateY(${rotateY}deg)
-       translateZ(8px)`;
-  });
-
-  card.addEventListener('mouseleave', () => {
-    card.style.transform =
-      'perspective(900px) rotateX(0deg) rotateY(0deg)';
-  });
-
-});
-
-
-/* =========================================================
-   SCROLL REVEAL
-========================================================= */
-
-const observer = new IntersectionObserver(
-  (entries) => {
-
-    entries.forEach((entry) => {
-
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-
+      target.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start"
+      });
     });
+  });
 
-  },
-  {
-    threshold: 0.12
+  /* -----------------------------------------
+     REVEAL ON SCROLL
+  ----------------------------------------- */
+
+  const revealElements = $$(".reveal");
+
+  if (prefersReducedMotion) {
+    revealElements.forEach((element) => {
+      element.classList.add("visible");
+    });
+  } else {
+    const revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -50px 0px"
+      }
+    );
+
+    revealElements.forEach((element, index) => {
+      element.style.transitionDelay = `${Math.min(
+        index * 35,
+        250
+      )}ms`;
+
+      revealObserver.observe(element);
+    });
   }
-);
 
-$$('.reveal').forEach((element) => {
-  observer.observe(element);
-});
+  /* -----------------------------------------
+     ACTIVE NAVIGATION
+  ----------------------------------------- */
 
+  const sections = $$("section[id]");
+  const navItems = $$(".nav-link");
 
-/* =========================================================
-   NAVBAR
-========================================================= */
+  const sectionObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
 
-const navbar = $('.navbar');
+        const id = entry.target.id;
 
-window.addEventListener(
-  'scroll',
-  () => {
+        navItems.forEach((link) => {
+          link.classList.toggle(
+            "active",
+            link.getAttribute("href") === `#${id}`
+          );
+        });
+      });
+    },
+    {
+      threshold: 0.35
+    }
+  );
 
-    if (window.scrollY > 50) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
+  sections.forEach((section) => {
+    sectionObserver.observe(section);
+  });
+
+  /* -----------------------------------------
+     COUNTERS
+  ----------------------------------------- */
+
+  const counters = $$(".stat-number");
+
+  const animateCounter = (element) => {
+    if (element.dataset.animated === "true") return;
+
+    element.dataset.animated = "true";
+
+    const target = Number(element.dataset.count);
+
+    if (!Number.isFinite(target)) return;
+
+    if (prefersReducedMotion) {
+      element.textContent = target;
+      return;
     }
 
-  },
-  { passive: true }
-);
+    const duration = 1800;
+    const start = performance.now();
 
+    const update = (time) => {
+      const elapsed = time - start;
+      const progress = Math.min(elapsed / duration, 1);
 
-/* =========================================================
-   ACTIVE NAVIGATION
-========================================================= */
+      const eased =
+        1 - Math.pow(1 - progress, 4);
 
-const sections = $$('section[id]');
-const navLinks = $$('.nav-link');
+      element.textContent = Math.floor(
+        target * eased
+      );
 
-const sectionObserver = new IntersectionObserver(
-  (entries) => {
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        element.textContent = target;
+      }
+    };
 
-    entries.forEach((entry) => {
+    requestAnimationFrame(update);
+  };
 
-      if (entry.isIntersecting) {
+  const counterObserver = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
 
-        navLinks.forEach((link) => {
-          link.classList.remove('active');
-        });
+        animateCounter(entry.target);
+        observer.unobserve(entry.target);
+      });
+    },
+    {
+      threshold: 0.6
+    }
+  );
 
-        const activeLink = document.querySelector(
-          `.nav-link[href="#${entry.target.id}"]`
+  counters.forEach((counter) => {
+    counterObserver.observe(counter);
+  });
+
+  /* -----------------------------------------
+     CUSTOM CURSOR
+  ----------------------------------------- */
+
+  const cursorDot = $(".cursor-dot");
+  const cursorRing = $(".cursor-ring");
+
+  const isTouchDevice =
+    window.matchMedia("(pointer: coarse)").matches;
+
+  if (!isTouchDevice && cursorDot && cursorRing) {
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+
+    let ringX = mouseX;
+    let ringY = mouseY;
+
+    window.addEventListener(
+      "mousemove",
+      (event) => {
+        mouseX = event.clientX;
+        mouseY = event.clientY;
+
+        cursorDot.style.transform =
+          `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+      },
+      { passive: true }
+    );
+
+    const animateCursor = () => {
+      ringX += (mouseX - ringX) * 0.14;
+      ringY += (mouseY - ringY) * 0.14;
+
+      cursorRing.style.transform =
+        `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+
+      requestAnimationFrame(animateCursor);
+    };
+
+    animateCursor();
+
+    const interactiveElements = $$(
+      "a, button, input, .project-card"
+    );
+
+    interactiveElements.forEach((element) => {
+      element.addEventListener("mouseenter", () => {
+        cursorRing.classList.add("hover");
+      });
+
+      element.addEventListener("mouseleave", () => {
+        cursorRing.classList.remove("hover");
+      });
+    });
+  }
+
+  /* -----------------------------------------
+     MAGNETIC BUTTONS
+  ----------------------------------------- */
+
+  if (!prefersReducedMotion && !isTouchDevice) {
+    const magneticElements = $$(".magnetic");
+
+    magneticElements.forEach((element) => {
+      element.addEventListener("mousemove", (event) => {
+        const rect = element.getBoundingClientRect();
+
+        const x =
+          event.clientX -
+          (rect.left + rect.width / 2);
+
+        const y =
+          event.clientY -
+          (rect.top + rect.height / 2);
+
+        element.style.transform =
+          `translate3d(${x * 0.16}px, ${y * 0.16}px, 0)`;
+      });
+
+      element.addEventListener("mouseleave", () => {
+        element.style.transform = "";
+      });
+    });
+  }
+
+  /* -----------------------------------------
+     3D TILT CARDS
+  ----------------------------------------- */
+
+  if (!prefersReducedMotion && !isTouchDevice) {
+    $$(".tilt-card").forEach((card) => {
+      card.addEventListener("mousemove", (event) => {
+        const rect = card.getBoundingClientRect();
+
+        const x =
+          event.clientX - rect.left;
+
+        const y =
+          event.clientY - rect.top;
+
+        const rotateY =
+          ((x / rect.width) - 0.5) * 10;
+
+        const rotateX =
+          ((y / rect.height) - 0.5) * -10;
+
+        card.style.transform =
+          `perspective(900px)
+           rotateX(${rotateX}deg)
+           rotateY(${rotateY}deg)
+           translateZ(5px)`;
+
+        const image =
+          $(".project-image", card);
+
+        if (image) {
+          image.style.setProperty(
+            "--mx",
+            `${(x / rect.width) * 100}%`
+          );
+
+          image.style.setProperty(
+            "--my",
+            `${(y / rect.height) * 100}%`
+          );
+        }
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.transform =
+          "perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0)";
+      });
+    });
+  }
+
+  /* -----------------------------------------
+     HERO PARALLAX
+  ----------------------------------------- */
+
+  if (!prefersReducedMotion && !isTouchDevice) {
+    const hero = $(".hero");
+    const heroContent = $(".hero-content");
+    const orbits = $$(".hero-orbit");
+
+    let ticking = false;
+
+    const updateParallax = () => {
+      const scroll = window.scrollY;
+
+      if (hero && scroll < window.innerHeight * 1.2) {
+        const movement = scroll * 0.18;
+
+        heroContent?.style.setProperty(
+          "transform",
+          `translate3d(0, ${movement}px, 0)`
         );
 
-        if (activeLink) {
-          activeLink.classList.add('active');
-        }
-
+        orbits.forEach((orbit, index) => {
+          orbit.style.transform =
+            `translateY(calc(-50% + ${scroll * (0.06 + index * 0.04)}px))
+             rotate(${25 + index * -60}deg)`;
+        });
       }
 
+      ticking = false;
+    };
+
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (ticking) return;
+
+        ticking = true;
+        requestAnimationFrame(updateParallax);
+      },
+      { passive: true }
+    );
+  }
+
+  /* -----------------------------------------
+     PROJECT IMAGE MOUSE LIGHT
+  ----------------------------------------- */
+
+  if (!isTouchDevice) {
+    $$(".project-card").forEach((card) => {
+      card.addEventListener("mousemove", (event) => {
+        const image = $(".project-image", card);
+
+        if (!image) return;
+
+        const rect = image.getBoundingClientRect();
+
+        image.style.setProperty(
+          "--mx",
+          `${((event.clientX - rect.left) / rect.width) * 100}%`
+        );
+
+        image.style.setProperty(
+          "--my",
+          `${((event.clientY - rect.top) / rect.height) * 100}%`
+        );
+      });
     });
-
-  },
-  {
-    threshold: 0.45
-  }
-);
-
-sections.forEach((section) => {
-  sectionObserver.observe(section);
-});
-
-
-/* =========================================================
-   PARALLAX
-========================================================= */
-
-const orb = $('.hero-orb');
-const heroGrid = $('.hero-grid');
-
-window.addEventListener(
-  'scroll',
-  () => {
-
-    const scroll = window.scrollY;
-
-    if (orb) {
-      orb.style.transform =
-        `translateY(calc(-50% + ${scroll * 0.16}px))`;
-    }
-
-    if (heroGrid) {
-      heroGrid.style.transform =
-        `translateY(${scroll * 0.08}px)`;
-    }
-
-  },
-  { passive: true }
-);
-
-
-/* =========================================================
-   MOUSE PARALLAX
-========================================================= */
-
-window.addEventListener('mousemove', (event) => {
-
-  const x = (event.clientX / window.innerWidth - .5);
-  const y = (event.clientY / window.innerHeight - .5);
-
-  if (orb) {
-    orb.style.marginLeft = `${x * 20}px`;
-    orb.style.marginTop = `${y * 20}px`;
   }
 
-});
+  /* -----------------------------------------
+     MUSIC PLAYER
+  ----------------------------------------- */
 
+  const audio = $("#ambient-audio");
+  const musicToggle = $("#music-toggle");
+  const musicPlayer = $("#music-player");
+  const volume = $("#volume");
 
-/* =========================================================
-   MUSIC PLAYER
-========================================================= */
+  let musicStarted = false;
 
-const music = $('#music');
-const musicButton = $('#musicButton');
-const musicPlayer = $('.music-player');
+  if (audio && volume) {
+    audio.volume = Number(volume.value);
 
-let musicPlaying = false;
-
-music.volume = 0.35;
-
-musicButton.addEventListener('click', async () => {
-
-  try {
-
-    if (!musicPlaying) {
-
-      await music.play();
-
-      musicPlaying = true;
-      musicPlayer.classList.add('playing');
-
-      musicButton.querySelector('.music-icon').textContent = 'Ⅱ';
-
-    } else {
-
-      music.pause();
-
-      musicPlaying = false;
-      musicPlayer.classList.remove('playing');
-
-      musicButton.querySelector('.music-icon').textContent = '♫';
-    }
-
-  } catch (error) {
-
-    console.warn(
-      'Não foi possível iniciar a música:',
-      error
-    );
-
-  }
-
-});
-
-
-/* =========================================================
-   KEYBOARD SHORTCUT
-========================================================= */
-
-window.addEventListener('keydown', (event) => {
-
-  if (event.code === 'Space' &&
-      event.target.tagName !== 'INPUT' &&
-      event.target.tagName !== 'TEXTAREA') {
-
-    event.preventDefault();
-    musicButton.click();
-  }
-
-});
-
-
-/* =========================================================
-   SMOOTH ANCHORS
-========================================================= */
-
-$$('a[href^="#"]').forEach((link) => {
-
-  link.addEventListener('click', (event) => {
-
-    const targetId = link.getAttribute('href');
-
-    if (targetId === '#') return;
-
-    const target = document.querySelector(targetId);
-
-    if (!target) return;
-
-    event.preventDefault();
-
-    target.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
-    });
-
-  });
-
-});
-
-
-/* =========================================================
-   CARD GLOW FOLLOWING MOUSE
-========================================================= */
-
-$$('.feature-card, .gallery-card').forEach((card) => {
-
-  card.addEventListener('mousemove', (event) => {
-
-    const rect = card.getBoundingClientRect();
-
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    card.style.background = `
-      radial-gradient(
-        circle at ${x}px ${y}px,
-        rgba(139,92,246,.12),
-        rgba(255,255,255,.035) 35%,
-        rgba(255,255,255,.01)
-      )
-    `;
-
-  });
-
-  card.addEventListener('mouseleave', () => {
-
-    card.style.background =
-      'linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.015))';
-
-  });
-
-});
-
-
-/* =========================================================
-   PARTICLE SYSTEM
-========================================================= */
-
-const canvas = $('#particles');
-const ctx = canvas.getContext('2d');
-
-let particles = [];
-let particleWidth;
-let particleHeight;
-
-function resizeCanvas() {
-
-  particleWidth = canvas.width = window.innerWidth;
-  particleHeight = canvas.height = window.innerHeight;
-
-}
-
-resizeCanvas();
-
-window.addEventListener('resize', resizeCanvas);
-
-class Particle {
-
-  constructor() {
-
-    this.x = Math.random() * particleWidth;
-    this.y = Math.random() * particleHeight;
-
-    this.size = Math.random() * 1.6 + .2;
-
-    this.speedX =
-      (Math.random() - .5) * .25;
-
-    this.speedY =
-      (Math.random() - .5) * .25;
-
-    this.opacity =
-      Math.random() * .5 + .1;
-  }
-
-  update() {
-
-    this.x += this.speedX;
-    this.y += this.speedY;
-
-    if (this.x < 0) this.x = particleWidth;
-    if (this.x > particleWidth) this.x = 0;
-
-    if (this.y < 0) this.y = particleHeight;
-    if (this.y > particleHeight) this.y = 0;
-  }
-
-  draw() {
-
-    ctx.beginPath();
-
-    ctx.arc(
-      this.x,
-      this.y,
-      this.size,
-      0,
-      Math.PI * 2
-    );
-
-    ctx.fillStyle =
-      `rgba(180,160,255,${this.opacity})`;
-
-    ctx.fill();
-  }
-}
-
-function createParticles() {
-
-  particles = [];
-
-  const amount =
-    Math.min(
-      180,
-      Math.floor(window.innerWidth / 8)
-    );
-
-  for (let i = 0; i < amount; i++) {
-    particles.push(new Particle());
-  }
-
-}
-
-createParticles();
-
-window.addEventListener(
-  'resize',
-  createParticles
-);
-
-
-/* =========================================================
-   PARTICLE CONNECTIONS
-========================================================= */
-
-function connectParticles() {
-
-  for (let a = 0; a < particles.length; a++) {
-
-    for (
-      let b = a + 1;
-      b < particles.length;
-      b++
-    ) {
-
-      const dx =
-        particles[a].x - particles[b].x;
-
-      const dy =
-        particles[a].y - particles[b].y;
-
-      const distance =
+    volume.addEventListener("input", () => {
