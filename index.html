@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Quantum Password Generator</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Three.js para os gráficos 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+
+    <div id="particles"></div>
+
+    <header class="topbar">
+        <div class="logo">
+            <span class="logo-icon">◈</span>
+            <span>QUANTUM<span class="accent">PASS</span></span>
+        </div>
+
+        <div class="top-actions">
+            <button id="musicBtn" class="icon-btn" title="Música">
+                ♪
+            </button>
+
+            <button id="themeBtn" class="icon-btn" title="Alternar tema">
+                ◐
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="hero">
+            <div>
+                <p class="eyebrow">SECURITY ENGINE v3.0</p>
+
+                <h1>
+                    GERADOR DE
+                    <span>SENHAS</span>
+                </h1>
+
+                <p class="subtitle">
+                    Crie credenciais extremamente fortes diretamente
+                    no seu dispositivo.
+                </p>
+            </div>
+
+            <div class="security-status">
+                <span class="status-dot"></span>
+                PROCESSAMENTO LOCAL
+            </div>
+        </section>
+
+        <section class="dashboard">
+
+            <!-- PAINEL ESQUERDO -->
+            <div class="panel generator-panel">
+
+                <div class="panel-title">
+                    <div>
+                        <small>GENERATE</small>
+                        <h2>Nova credencial</h2>
+                    </div>
+
+                    <div class="shield">🛡</div>
+                </div>
+
+                <div class="password-box">
+                    <input
+                        id="passwordOutput"
+                        type="text"
+                        readonly
+                        value="Clique em GERAR"
+                    >
+
+                    <button id="copyBtn" class="copy-btn">
+                        COPIAR
+                    </button>
+                </div>
+
+                <div class="strength">
+                    <div class="strength-header">
+                        <span>FORÇA DA SENHA</span>
+                        <strong id="strengthText">—</strong>
+                    </div>
+
+                    <div class="strength-bar">
+                        <div id="strengthFill"></div>
+                    </div>
+
+                    <div class="strength-info">
+                        <span id="entropyText">Entropia: —</span>
+                        <span id="crackText">Resistência: —</span>
+                    </div>
+                </div>
+
+                <div class="mode-selector">
+                    <button class="mode active" data-mode="password">
+                        SENHA
+                    </button>
+
+                    <button class="mode" data-mode="passphrase">
+                        PASSPHRASE
+                    </button>
+
+                    <button class="mode" data-mode="pin">
+                        PIN
+                    </button>
+                </div>
+
+                <div class="control-group" id="lengthGroup">
+
+                    <div class="control-label">
+                        <label>COMPRIMENTO</label>
+                        <span id="lengthValue">20</span>
+                    </div>
+
+                    <input
+                        id="length"
+                        type="range"
+                        min="8"
+                        max="64"
+                        value="20"
+                    >
+                </div>
+
+                <div class="character-options">
+
+                    <label class="option">
+                        <input type="checkbox" id="uppercase" checked>
+                        <span class="check"></span>
+                        <div>
+                            <strong>A-Z</strong>
+                            <small>Maiúsculas</small>
+                        </div>
+                    </label>
+
+                    <label class="option">
+                        <input type="checkbox" id="lowercase" checked>
+                        <span class="check"></span>
+                        <div>
+                            <strong>a-z</strong>
+                            <small>Minúsculas</small>
+                        </div>
+                    </label>
+
+                    <label class="option">
+                        <input type="checkbox" id="numbers" checked>
+                        <span class="check"></span>
+                        <div>
+                            <strong>0-9</strong>
+                            <small>Números</small>
+                        </div>
+                    </label>
+
+                    <label class="option">
+                        <input type="checkbox" id="symbols" checked>
+                        <span class="check"></span>
+                        <div>
+                            <strong>!@#$</strong>
+                            <small>Símbolos</small>
+                        </div>
+                    </label>
+
+                </div>
+
+                <div class="advanced-options">
+
+                    <label class="switch-row">
+                        <span>
+                            <strong>Excluir caracteres ambíguos</strong>
+                            <small>l, 1, I, O, 0 etc.</small>
+                        </span>
+
+                        <input type="checkbox" id="ambiguous">
+                        <span class="switch"></span>
+                    </label>
+
+                    <label class="switch-row">
+                        <span>
+                            <strong>Garantir todos os conjuntos</strong>
+                            <small>Inclui pelo menos 1 de cada tipo</small>
+                        </span>
+
+                        <input type="checkbox" id="guarantee" checked>
+                        <span class="switch"></span>
+                    </label>
+
+                </div>
+
+                <button id="generateBtn" class="generate-btn">
+                    <span>⚡</span>
+                    GERAR SENHA
+                </button>
+
+            </div>
+
+            <!-- PAINEL 3D -->
+            <div class="panel visual-panel">
+
+                <div class="visual-header">
+                    <div>
+                        <small>LIVE ANALYSIS</small>
+                        <h2>Security Core</h2>
+                    </div>
+
+                    <span id="score">00</span>
+                </div>
+
+                <div id="three-container"></div>
+
+                <div class="stats">
+
+                    <div class="stat">
+                        <span>COMBINAÇÕES</span>
+                        <strong id="combinations">—</strong>
+                    </div>
+
+                    <div class="stat">
+                        <span>ENTROPIA</span>
+                        <strong id="entropy">—</strong>
+                    </div>
+
+                    <div class="stat">
+                        <span>QUALIDADE</span>
+                        <strong id="quality">—</strong>
+                    </div>
+
+                </div>
+
+                <div class="local-security">
+                    <span class="pulse"></span>
+
+                    <div>
+                        <strong>100% CLIENT-SIDE</strong>
+                        <small>
+                            A senha nunca é enviada para um servidor.
+                        </small>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="tips">
+
+            <div class="tip">
+                <span>01</span>
+                <div>
+                    <strong>Prefira 16+ caracteres</strong>
+                    <p>Senhas maiores oferecem muito mais combinações possíveis.</p>
+                </div>
+            </div>
+
+            <div class="tip">
+                <span>02</span>
+                <div>
+                    <strong>Use vários conjuntos</strong>
+                    <p>Combine letras, números e símbolos quando possível.</p>
+                </div>
+            </div>
+
+            <div class="tip">
+                <span>03</span>
+                <div>
+                    <strong>Não reutilize senhas</strong>
+                    <p>Use uma credencial diferente para cada serviço.</p>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <span>QUANTUM PASS</span>
+        <span>SECURE • LOCAL • RANDOM</span>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
