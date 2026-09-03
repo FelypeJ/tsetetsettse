@@ -1,746 +1,528 @@
-/*
-    QUANTUM PASS
-    Gerador de senhas client-side
+/* =========================================================
+   NEXUS — INTERACTIVE ENGINE
+========================================================= */
 
-    A geração utiliza crypto.getRandomValues(),
-    fornecido pelo navegador, para obter aleatoriedade
-    criptograficamente segura.
-*/
-
-const output = document.getElementById("passwordOutput");
-const generateBtn = document.getElementById("generateBtn");
-const copyBtn = document.getElementById("copyBtn");
-
-const lengthInput = document.getElementById("length");
-const lengthValue = document.getElementById("lengthValue");
-
-const uppercase = document.getElementById("uppercase");
-const lowercase = document.getElementById("lowercase");
-const numbers = document.getElementById("numbers");
-const symbols = document.getElementById("symbols");
-
-const ambiguous = document.getElementById("ambiguous");
-const guarantee = document.getElementById("guarantee");
-
-const strengthText = document.getElementById("strengthText");
-const strengthFill = document.getElementById("strengthFill");
-
-const entropyText = document.getElementById("entropyText");
-const crackText = document.getElementById("crackText");
-
-const entropyElement = document.getElementById("entropy");
-const combinationsElement = document.getElementById("combinations");
-const qualityElement = document.getElementById("quality");
-const scoreElement = document.getElementById("score");
-
-const modes = document.querySelectorAll(".mode");
-
-let currentMode = "password";
-
-const CHARSETS = {
-    uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    lowercase: "abcdefghijklmnopqrstuvwxyz",
-    numbers: "0123456789",
-    symbols: "!@#$%^&*()-_=+[]{};:,.?/<>~"
-};
-
-const AMBIGUOUS = "l1I0Oo";
-
-const WORDS = [
-    "aurora", "nuvem", "cobalto", "pixel", "radar",
-    "neon", "cometa", "orbit", "laser", "quantum",
-    "vento", "oceano", "tigre", "foguete", "cristal",
-    "codigo", "matrix", "galaxia", "energia", "sol",
-    "lua", "montanha", "rio", "floresta", "tempestade",
-    "prisma", "saturno", "cosmos", "diamante", "esfera",
-    "vortex", "portal", "hacker", "escudo", "firewall"
-];
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => document.querySelectorAll(selector);
 
 
 /* =========================================================
-   RANDOM CRIPTOGRAFICAMENTE SEGURO
+   LOADER
 ========================================================= */
 
-function secureRandom(max) {
+const loader = $('#loader');
+const loaderLine = $('.loader-line span');
+const loaderPercent = $('.loader-percent');
 
-    if (max <= 0) {
-        throw new Error("Valor inválido.");
-    }
+let progress = 0;
 
-    const array = new Uint32Array(1);
+const loaderInterval = setInterval(() => {
 
-    /*
-        Rejection sampling evita viés de módulo.
-    */
+  progress += Math.floor(Math.random() * 7) + 1;
 
-    const maxUint = 0xFFFFFFFF;
-    const limit = maxUint - (maxUint % max);
-
-    let random;
-
-    do {
-        crypto.getRandomValues(array);
-        random = array[0];
-    } while (random >= limit);
-
-    return random % max;
-}
-
-
-function randomCharacter(charset) {
-
-    if (!charset.length) {
-        return "";
-    }
-
-    return charset[secureRandom(charset.length)];
-}
-
-
-/* =========================================================
-   CONFIGURAÇÃO
-========================================================= */
-
-function getCharset() {
-
-    let charset = "";
-
-    if (uppercase.checked) {
-        charset += CHARSETS.uppercase;
-    }
-
-    if (lowercase.checked) {
-        charset += CHARSETS.lowercase;
-    }
-
-    if (numbers.checked) {
-        charset += CHARSETS.numbers;
-    }
-
-    if (symbols.checked) {
-        charset += CHARSETS.symbols;
-    }
-
-    if (ambiguous.checked) {
-
-        charset = [...charset]
-            .filter(char => !AMBIGUOUS.includes(char))
-            .join("");
-    }
-
-    return charset;
-}
-
-
-/* =========================================================
-   SHUFFLE SEGURO
-========================================================= */
-
-function secureShuffle(array) {
-
-    for (let i = array.length - 1; i > 0; i--) {
-
-        const j = secureRandom(i + 1);
-
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-
-    return array;
-}
-
-
-/* =========================================================
-   SENHA
-========================================================= */
-
-function generatePassword() {
-
-    const length = Number(lengthInput.value);
-    const charset = getCharset();
-
-    if (!charset.length) {
-
-        alert("Selecione pelo menos um conjunto de caracteres.");
-
-        return "";
-    }
-
-    let chars = [];
-
-    /*
-        Garante pelo menos um caractere de cada
-        conjunto selecionado.
-    */
-
-    if (guarantee.checked) {
-
-        const selectedSets = [];
-
-        if (uppercase.checked)
-            selectedSets.push(CHARSETS.uppercase);
-
-        if (lowercase.checked)
-            selectedSets.push(CHARSETS.lowercase);
-
-        if (numbers.checked)
-            selectedSets.push(CHARSETS.numbers);
-
-        if (symbols.checked)
-            selectedSets.push(CHARSETS.symbols);
-
-        for (const set of selectedSets) {
-
-            let cleanSet = set;
-
-            if (ambiguous.checked) {
-
-                cleanSet = [...set]
-                    .filter(c => !AMBIGUOUS.includes(c))
-                    .join("");
-            }
-
-            if (cleanSet.length) {
-                chars.push(randomCharacter(cleanSet));
-            }
-        }
-    }
-
-    while (chars.length < length) {
-        chars.push(randomCharacter(charset));
-    }
-
-    secureShuffle(chars);
-
-    return chars.slice(0, length).join("");
-}
-
-
-/* =========================================================
-   PASSPHRASE
-========================================================= */
-
-function generatePassphrase() {
-
-    const wordCount = Math.max(
-        4,
-        Math.min(10, Math.floor(Number(lengthInput.value) / 5))
-    );
-
-    const words = [];
-
-    for (let i = 0; i < wordCount; i++) {
-
-        const word = WORDS[
-            secureRandom(WORDS.length)
-        ];
-
-        words.push(word);
-    }
-
-    const separatorOptions = [
-        "-",
-        "_",
-        ".",
-        "@",
-        "#"
-    ];
-
-    const separator =
-        separatorOptions[
-            secureRandom(separatorOptions.length)
-        ];
-
-    return words.join(separator);
-}
-
-
-/* =========================================================
-   PIN
-========================================================= */
-
-function generatePIN() {
-
-    const length = Math.max(
-        4,
-        Math.min(20, Number(lengthInput.value))
-    );
-
-    let pin = "";
-
-    for (let i = 0; i < length; i++) {
-
-        pin += randomCharacter("0123456789");
-    }
-
-    return pin;
-}
-
-
-/* =========================================================
-   GERADOR PRINCIPAL
-========================================================= */
-
-function generate() {
-
-    let password = "";
-
-    if (currentMode === "password") {
-        password = generatePassword();
-    }
-
-    if (currentMode === "passphrase") {
-        password = generatePassphrase();
-    }
-
-    if (currentMode === "pin") {
-        password = generatePIN();
-    }
-
-    if (!password) {
-        return;
-    }
-
-    output.value = password;
-
-    output.style.transform = "scale(.97)";
-    output.style.opacity = ".3";
+  if (progress >= 100) {
+    progress = 100;
+    clearInterval(loaderInterval);
 
     setTimeout(() => {
+      loader.classList.add('hide');
+    }, 450);
+  }
 
-        output.style.transform = "scale(1)";
-        output.style.opacity = "1";
+  loaderLine.style.width = `${progress}%`;
+  loaderPercent.textContent = `${progress}%`;
 
-    }, 80);
-
-    analyze(password);
-}
-
-
-/* =========================================================
-   ANÁLISE
-========================================================= */
-
-function calculateEntropy(password) {
-
-    if (!password) {
-        return 0;
-    }
-
-    let pool = 0;
-
-    if (currentMode === "pin") {
-        pool = 10;
-    }
-
-    else if (currentMode === "passphrase") {
-        pool = WORDS.length;
-    }
-
-    else {
-        pool = getCharset().length;
-    }
-
-    if (!pool) {
-        return 0;
-    }
-
-    return password.length * Math.log2(pool);
-}
-
-
-function formatLargeNumber(number) {
-
-    if (number < 1000) {
-        return Math.round(number).toString();
-    }
-
-    if (number < 1e6) {
-        return (number / 1e3).toFixed(1) + "K";
-    }
-
-    if (number < 1e9) {
-        return (number / 1e6).toFixed(1) + "M";
-    }
-
-    if (number < 1e12) {
-        return (number / 1e9).toFixed(1) + "B";
-    }
-
-    if (number < 1e15) {
-        return (number / 1e12).toFixed(1) + "T";
-    }
-
-    return number.toExponential(2);
-}
-
-
-function analyze(password) {
-
-    const entropy = calculateEntropy(password);
-
-    /*
-        Esta é uma estimativa baseada no espaço de busca.
-        Não representa uma previsão real de tempo para
-        quebrar uma senha em todos os cenários.
-    */
-
-    let score = Math.min(
-        100,
-        Math.round((entropy / 128) * 100)
-    );
-
-    let strength;
-
-    if (entropy < 40) {
-        strength = "FRACA";
-    }
-
-    else if (entropy < 60) {
-        strength = "MODERADA";
-    }
-
-    else if (entropy < 80) {
-        strength = "FORTE";
-    }
-
-    else if (entropy < 100) {
-        strength = "MUITO FORTE";
-    }
-
-    else {
-        strength = "EXCELENTE";
-    }
-
-    strengthText.textContent = strength;
-
-    strengthText.style.color =
-        entropy < 40
-            ? "#ff304f"
-            : entropy < 60
-                ? "#ffc400"
-                : "#00ff9d";
-
-    strengthFill.style.width =
-        Math.max(3, score) + "%";
-
-    entropyText.textContent =
-        `Entropia: ${entropy.toFixed(1)} bits`;
-
-    entropyElement.textContent =
-        entropy.toFixed(1) + " bits";
-
-    scoreElement.textContent =
-        String(score).padStart(2, "0");
-
-    qualityElement.textContent =
-        strength;
-
-    /*
-        Número aproximado de possibilidades.
-    */
-
-    let pool;
-
-    if (currentMode === "pin") {
-        pool = 10;
-    }
-
-    else if (currentMode === "passphrase") {
-        pool = WORDS.length;
-    }
-
-    else {
-        pool = getCharset().length;
-    }
-
-    const combinations =
-        Math.pow(pool, password.length);
-
-    combinationsElement.textContent =
-        formatLargeNumber(combinations);
-
-    /*
-        Texto qualitativo.
-    */
-
-    if (entropy < 40) {
-        crackText.textContent = "Resistência: baixa";
-    }
-
-    else if (entropy < 60) {
-        crackText.textContent = "Resistência: média";
-    }
-
-    else if (entropy < 80) {
-        crackText.textContent = "Resistência: alta";
-    }
-
-    else {
-        crackText.textContent = "Resistência: extrema";
-    }
-
-    updateCore(score);
-}
+}, 45);
 
 
 /* =========================================================
-   SLIDER
+   CUSTOM CURSOR
 ========================================================= */
 
-lengthInput.addEventListener("input", () => {
+const cursor = $('.cursor');
+const cursorRing = $('.cursor-ring');
 
-    lengthValue.textContent = lengthInput.value;
+let mouseX = 0;
+let mouseY = 0;
+let ringX = 0;
+let ringY = 0;
 
-    const percent =
-        ((lengthInput.value - lengthInput.min) /
-        (lengthInput.max - lengthInput.min)) * 100;
+window.addEventListener('mousemove', (event) => {
 
-    lengthInput.style.background =
-        `linear-gradient(
-            90deg,
-            var(--cyan) ${percent}%,
-            #172136 ${percent}%
-        )`;
+  mouseX = event.clientX;
+  mouseY = event.clientY;
+
+  cursor.style.left = `${mouseX}px`;
+  cursor.style.top = `${mouseY}px`;
+});
+
+function animateCursor() {
+
+  ringX += (mouseX - ringX) * 0.13;
+  ringY += (mouseY - ringY) * 0.13;
+
+  cursorRing.style.left = `${ringX}px`;
+  cursorRing.style.top = `${ringY}px`;
+
+  requestAnimationFrame(animateCursor);
+}
+
+animateCursor();
+
+
+/* =========================================================
+   CURSOR HOVER
+========================================================= */
+
+const interactiveElements = $$(
+  'a, button, .feature-card, .gallery-card, .tech-item'
+);
+
+interactiveElements.forEach((element) => {
+
+  element.addEventListener('mouseenter', () => {
+    cursorRing.classList.add('hover');
+  });
+
+  element.addEventListener('mouseleave', () => {
+    cursorRing.classList.remove('hover');
+  });
+
 });
 
 
 /* =========================================================
-   MODOS
+   MAGNETIC BUTTONS
 ========================================================= */
 
-modes.forEach(mode => {
+$$('.magnetic').forEach((element) => {
 
-    mode.addEventListener("click", () => {
+  element.addEventListener('mousemove', (event) => {
 
-        modes.forEach(m => {
-            m.classList.remove("active");
+    const rect = element.getBoundingClientRect();
+
+    const x = event.clientX - rect.left - rect.width / 2;
+    const y = event.clientY - rect.top - rect.height / 2;
+
+    element.style.transform =
+      `translate(${x * 0.18}px, ${y * 0.18}px)`;
+  });
+
+  element.addEventListener('mouseleave', () => {
+    element.style.transform = '';
+  });
+
+});
+
+
+/* =========================================================
+   3D TILT
+========================================================= */
+
+$$('.tilt').forEach((card) => {
+
+  card.addEventListener('mousemove', (event) => {
+
+    const rect = card.getBoundingClientRect();
+
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -7;
+    const rotateY = ((x - centerX) / centerX) * 7;
+
+    card.style.transform =
+      `perspective(900px)
+       rotateX(${rotateX}deg)
+       rotateY(${rotateY}deg)
+       translateZ(8px)`;
+  });
+
+  card.addEventListener('mouseleave', () => {
+    card.style.transform =
+      'perspective(900px) rotateX(0deg) rotateY(0deg)';
+  });
+
+});
+
+
+/* =========================================================
+   SCROLL REVEAL
+========================================================= */
+
+const observer = new IntersectionObserver(
+  (entries) => {
+
+    entries.forEach((entry) => {
+
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+
+    });
+
+  },
+  {
+    threshold: 0.12
+  }
+);
+
+$$('.reveal').forEach((element) => {
+  observer.observe(element);
+});
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+const navbar = $('.navbar');
+
+window.addEventListener(
+  'scroll',
+  () => {
+
+    if (window.scrollY > 50) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+
+  },
+  { passive: true }
+);
+
+
+/* =========================================================
+   ACTIVE NAVIGATION
+========================================================= */
+
+const sections = $$('section[id]');
+const navLinks = $$('.nav-link');
+
+const sectionObserver = new IntersectionObserver(
+  (entries) => {
+
+    entries.forEach((entry) => {
+
+      if (entry.isIntersecting) {
+
+        navLinks.forEach((link) => {
+          link.classList.remove('active');
         });
 
-        mode.classList.add("active");
+        const activeLink = document.querySelector(
+          `.nav-link[href="#${entry.target.id}"]`
+        );
 
-        currentMode =
-            mode.dataset.mode;
-
-        const characterOptions =
-            document.querySelector(".character-options");
-
-        const advanced =
-            document.querySelector(".advanced-options");
-
-        const lengthGroup =
-            document.getElementById("lengthGroup");
-
-        if (currentMode === "password") {
-
-            characterOptions.style.display = "grid";
-            advanced.style.display = "block";
-
-            lengthInput.min = 8;
-            lengthInput.max = 64;
-
-            if (Number(lengthInput.value) < 8) {
-                lengthInput.value = 20;
-            }
-
-            lengthValue.textContent =
-                lengthInput.value;
+        if (activeLink) {
+          activeLink.classList.add('active');
         }
 
-        else if (currentMode === "passphrase") {
+      }
 
-            characterOptions.style.display = "none";
-            advanced.style.display = "none";
-
-            lengthInput.min = 20;
-            lengthInput.max = 50;
-
-            if (Number(lengthInput.value) < 20) {
-                lengthInput.value = 25;
-            }
-
-            lengthValue.textContent =
-                lengthInput.value;
-        }
-
-        else {
-
-            characterOptions.style.display = "none";
-            advanced.style.display = "none";
-
-            lengthInput.min = 4;
-            lengthInput.max = 20;
-
-            if (Number(lengthInput.value) > 20) {
-                lengthInput.value = 12;
-            }
-
-            lengthValue.textContent =
-                lengthInput.value;
-        }
-
-        generate();
     });
+
+  },
+  {
+    threshold: 0.45
+  }
+);
+
+sections.forEach((section) => {
+  sectionObserver.observe(section);
 });
 
 
 /* =========================================================
-   COPY
+   PARALLAX
 ========================================================= */
 
-copyBtn.addEventListener("click", async () => {
+const orb = $('.hero-orb');
+const heroGrid = $('.hero-grid');
 
-    if (!output.value || output.value === "Clique em GERAR") {
-        return;
+window.addEventListener(
+  'scroll',
+  () => {
+
+    const scroll = window.scrollY;
+
+    if (orb) {
+      orb.style.transform =
+        `translateY(calc(-50% + ${scroll * 0.16}px))`;
     }
 
-    try {
-
-        await navigator.clipboard.writeText(
-            output.value
-        );
-
-        copyBtn.textContent = "COPIADO!";
-
-        setTimeout(() => {
-            copyBtn.textContent = "COPIAR";
-        }, 1500);
-
-    } catch {
-
-        output.select();
-
-        document.execCommand("copy");
-
-        copyBtn.textContent = "COPIADO!";
-
-        setTimeout(() => {
-            copyBtn.textContent = "COPIAR";
-        }, 1500);
+    if (heroGrid) {
+      heroGrid.style.transform =
+        `translateY(${scroll * 0.08}px)`;
     }
+
+  },
+  { passive: true }
+);
+
+
+/* =========================================================
+   MOUSE PARALLAX
+========================================================= */
+
+window.addEventListener('mousemove', (event) => {
+
+  const x = (event.clientX / window.innerWidth - .5);
+  const y = (event.clientY / window.innerHeight - .5);
+
+  if (orb) {
+    orb.style.marginLeft = `${x * 20}px`;
+    orb.style.marginTop = `${y * 20}px`;
+  }
+
 });
 
 
 /* =========================================================
-   BOTÃO GERAR
+   MUSIC PLAYER
 ========================================================= */
 
-generateBtn.addEventListener("click", generate);
+const music = $('#music');
+const musicButton = $('#musicButton');
+const musicPlayer = $('.music-player');
+
+let musicPlaying = false;
+
+music.volume = 0.35;
+
+musicButton.addEventListener('click', async () => {
+
+  try {
+
+    if (!musicPlaying) {
+
+      await music.play();
+
+      musicPlaying = true;
+      musicPlayer.classList.add('playing');
+
+      musicButton.querySelector('.music-icon').textContent = 'Ⅱ';
+
+    } else {
+
+      music.pause();
+
+      musicPlaying = false;
+      musicPlayer.classList.remove('playing');
+
+      musicButton.querySelector('.music-icon').textContent = '♫';
+    }
+
+  } catch (error) {
+
+    console.warn(
+      'Não foi possível iniciar a música:',
+      error
+    );
+
+  }
+
+});
 
 
 /* =========================================================
-   THREE.JS — NÚCLEO 3D
+   KEYBOARD SHORTCUT
 ========================================================= */
 
-const container =
-    document.getElementById("three-container");
+window.addEventListener('keydown', (event) => {
 
-const scene =
-    new THREE.Scene();
+  if (event.code === 'Space' &&
+      event.target.tagName !== 'INPUT' &&
+      event.target.tagName !== 'TEXTAREA') {
 
-const camera =
-    new THREE.PerspectiveCamera(
-        45,
-        container.clientWidth /
-        container.clientHeight,
-        0.1,
-        1000
-    );
+    event.preventDefault();
+    musicButton.click();
+  }
 
-camera.position.z = 5;
+});
 
-const renderer =
-    new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: true
+
+/* =========================================================
+   SMOOTH ANCHORS
+========================================================= */
+
+$$('a[href^="#"]').forEach((link) => {
+
+  link.addEventListener('click', (event) => {
+
+    const targetId = link.getAttribute('href');
+
+    if (targetId === '#') return;
+
+    const target = document.querySelector(targetId);
+
+    if (!target) return;
+
+    event.preventDefault();
+
+    target.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
     });
 
-renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio, 2)
+  });
+
+});
+
+
+/* =========================================================
+   CARD GLOW FOLLOWING MOUSE
+========================================================= */
+
+$$('.feature-card, .gallery-card').forEach((card) => {
+
+  card.addEventListener('mousemove', (event) => {
+
+    const rect = card.getBoundingClientRect();
+
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    card.style.background = `
+      radial-gradient(
+        circle at ${x}px ${y}px,
+        rgba(139,92,246,.12),
+        rgba(255,255,255,.035) 35%,
+        rgba(255,255,255,.01)
+      )
+    `;
+
+  });
+
+  card.addEventListener('mouseleave', () => {
+
+    card.style.background =
+      'linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.015))';
+
+  });
+
+});
+
+
+/* =========================================================
+   PARTICLE SYSTEM
+========================================================= */
+
+const canvas = $('#particles');
+const ctx = canvas.getContext('2d');
+
+let particles = [];
+let particleWidth;
+let particleHeight;
+
+function resizeCanvas() {
+
+  particleWidth = canvas.width = window.innerWidth;
+  particleHeight = canvas.height = window.innerHeight;
+
+}
+
+resizeCanvas();
+
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+
+  constructor() {
+
+    this.x = Math.random() * particleWidth;
+    this.y = Math.random() * particleHeight;
+
+    this.size = Math.random() * 1.6 + .2;
+
+    this.speedX =
+      (Math.random() - .5) * .25;
+
+    this.speedY =
+      (Math.random() - .5) * .25;
+
+    this.opacity =
+      Math.random() * .5 + .1;
+  }
+
+  update() {
+
+    this.x += this.speedX;
+    this.y += this.speedY;
+
+    if (this.x < 0) this.x = particleWidth;
+    if (this.x > particleWidth) this.x = 0;
+
+    if (this.y < 0) this.y = particleHeight;
+    if (this.y > particleHeight) this.y = 0;
+  }
+
+  draw() {
+
+    ctx.beginPath();
+
+    ctx.arc(
+      this.x,
+      this.y,
+      this.size,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fillStyle =
+      `rgba(180,160,255,${this.opacity})`;
+
+    ctx.fill();
+  }
+}
+
+function createParticles() {
+
+  particles = [];
+
+  const amount =
+    Math.min(
+      180,
+      Math.floor(window.innerWidth / 8)
+    );
+
+  for (let i = 0; i < amount; i++) {
+    particles.push(new Particle());
+  }
+
+}
+
+createParticles();
+
+window.addEventListener(
+  'resize',
+  createParticles
 );
 
-renderer.setSize(
-    container.clientWidth,
-    container.clientHeight
-);
 
-container.appendChild(renderer.domElement);
+/* =========================================================
+   PARTICLE CONNECTIONS
+========================================================= */
 
+function connectParticles() {
 
-/* Grupo principal */
+  for (let a = 0; a < particles.length; a++) {
 
-const core =
-    new THREE.Group();
+    for (
+      let b = a + 1;
+      b < particles.length;
+      b++
+    ) {
 
-scene.add(core);
+      const dx =
+        particles[a].x - particles[b].x;
 
+      const dy =
+        particles[a].y - particles[b].y;
 
-/* Esfera */
-
-const sphereGeometry =
-    new THREE.IcosahedronGeometry(
-        1.15,
-        3
-    );
-
-const sphereMaterial =
-    new THREE.MeshBasicMaterial({
-        color: 0x00f6ff,
-        wireframe: true,
-        transparent: true,
-        opacity: .55
-    });
-
-const sphere =
-    new THREE.Mesh(
-        sphereGeometry,
-        sphereMaterial
-    );
-
-core.add(sphere);
-
-
-/* Segunda esfera */
-
-const innerGeometry =
-    new THREE.IcosahedronGeometry(
-        .72,
-        2
-    );
-
-const innerMaterial =
-    new THREE.MeshBasicMaterial({
-        color: 0x8a2be2,
-        wireframe: true,
-        transparent: true,
-        opacity: .35
-    });
-
-const inner =
-    new THREE.Mesh(
-        innerGeometry,
-        innerMaterial
-    );
-
-core.add(inner);
-
-
-/* Anéis */
-
-const rings = [];
-
-for (let i = 0; i < 3; i++) {
-
-    const geometry =
-        new THREE.TorusGeometry(
-            1.45 + i * .18,
-            .008,
-            8,
-            100
-        );
-
-    const material =
-        new THREE.MeshBasicMaterial({
-            color:
-                i === 1
-                    ? 0xff2bd6
-                    : 0
+      const distance =

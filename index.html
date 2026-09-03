@@ -1,288 +1,377 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Quantum Password Generator</title>
-
-    <link rel="stylesheet" href="style.css">
-
-    <!-- Three.js para os gráficos 3D -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#050509" />
+  <title>NEXUS — Beyond The Future</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-    <div id="particles"></div>
+  <!-- CURSOR -->
+  <div class="cursor"></div>
+  <div class="cursor-ring"></div>
 
-    <header class="topbar">
-        <div class="logo">
-            <span class="logo-icon">◈</span>
-            <span>QUANTUM<span class="accent">PASS</span></span>
+  <!-- BACKGROUND -->
+  <div class="noise"></div>
+  <div class="aurora aurora-1"></div>
+  <div class="aurora aurora-2"></div>
+  <canvas id="particles"></canvas>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-logo">NEXUS</div>
+    <div class="loader-line">
+      <span></span>
+    </div>
+    <div class="loader-percent">0%</div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <a href="#home" class="logo magnetic">NEXUS<span>.</span></a>
+
+    <nav>
+      <a href="#home" class="nav-link active">INÍCIO</a>
+      <a href="#experience" class="nav-link">EXPERIÊNCIA</a>
+      <a href="#technology" class="nav-link">TECNOLOGIA</a>
+      <a href="#contact" class="nav-link">CONTATO</a>
+    </nav>
+
+    <button class="menu-button magnetic" aria-label="Abrir menu">
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <!-- HERO -->
+  <main>
+
+    <section id="home" class="hero section">
+
+      <div class="hero-grid"></div>
+
+      <div class="hero-content reveal">
+        <div class="eyebrow">
+          <span class="status-dot"></span>
+          SYSTEM ONLINE
         </div>
 
-        <div class="top-actions">
-            <button id="musicBtn" class="icon-btn" title="Música">
-                ♪
-            </button>
+        <h1>
+          BEYOND
+          <span>THE</span>
+          <strong>FUTURE</strong>
+        </h1>
 
-            <button id="themeBtn" class="icon-btn" title="Alternar tema">
-                ◐
-            </button>
+        <p>
+          Uma experiência digital construída para ultrapassar
+          os limites entre tecnologia, design e imaginação.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#experience" class="primary-button magnetic">
+            <span>EXPLORE</span>
+            <i>↗</i>
+          </a>
+
+          <a href="#technology" class="text-button">
+            Descobrir mais
+            <span>↓</span>
+          </a>
         </div>
-    </header>
+      </div>
 
-    <main class="container">
+      <div class="hero-orb">
+        <div class="orb-core"></div>
+        <div class="orb-ring ring-a"></div>
+        <div class="orb-ring ring-b"></div>
+        <div class="orb-ring ring-c"></div>
+      </div>
 
-        <section class="hero">
+      <div class="hero-scroll">
+        <span>SCROLL TO EXPLORE</span>
+        <div class="scroll-line"></div>
+      </div>
+
+      <div class="hero-counter">
+        <span>01</span>
+        <small>/ 04</small>
+      </div>
+
+    </section>
+
+    <!-- MARQUEE -->
+    <section class="marquee-section">
+      <div class="marquee">
+        <span>CREATE</span>
+        <b>✦</b>
+        <span>IMAGINE</span>
+        <b>✦</b>
+        <span>BUILD</span>
+        <b>✦</b>
+        <span>EVOLVE</span>
+        <b>✦</b>
+        <span>CREATE</span>
+        <b>✦</b>
+        <span>IMAGINE</span>
+        <b>✦</b>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience" class="experience section">
+
+      <div class="section-heading reveal">
+        <span class="section-number">01 / EXPERIENCE</span>
+
+        <h2>
+          DESIGNING
+          <em>THE</em>
+          <span>UNKNOWN.</span>
+        </h2>
+
+        <p>
+          Cada detalhe foi pensado para transformar uma simples
+          página em uma experiência digital imersiva.
+        </p>
+      </div>
+
+      <div class="cards">
+
+        <article class="feature-card tilt reveal">
+          <div class="card-number">01</div>
+          <div class="card-icon">◈</div>
+          <h3>IMMERSIVE</h3>
+          <p>
+            Profundidade, movimento e luz trabalhando juntos
+            para criar uma interface viva.
+          </p>
+          <div class="card-line"></div>
+          <span class="card-arrow">↗</span>
+        </article>
+
+        <article class="feature-card tilt reveal">
+          <div class="card-number">02</div>
+          <div class="card-icon">✦</div>
+          <h3>INTELLIGENT</h3>
+          <p>
+            Interações que respondem ao usuário e transformam
+            cada movimento em parte da experiência.
+          </p>
+          <div class="card-line"></div>
+          <span class="card-arrow">↗</span>
+        </article>
+
+        <article class="feature-card tilt reveal">
+          <div class="card-number">03</div>
+          <div class="card-icon">∞</div>
+          <h3>LIMITLESS</h3>
+          <p>
+            Uma linguagem visual preparada para crescer,
+            evoluir e se adaptar a novas ideias.
+          </p>
+          <div class="card-line"></div>
+          <span class="card-arrow">↗</span>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- BIG STATEMENT -->
+    <section class="statement section">
+      <div class="statement-bg"></div>
+
+      <div class="statement-content reveal">
+        <span>THE NEXT DIGITAL ERA</span>
+
+        <h2>
+          DON'T FOLLOW
+          <br />
+          <i>THE FUTURE.</i>
+          <br />
+          CREATE IT.
+        </h2>
+
+        <div class="statement-orbit">
+          <div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TECHNOLOGY -->
+    <section id="technology" class="technology section">
+
+      <div class="section-heading reveal">
+        <span class="section-number">02 / TECHNOLOGY</span>
+
+        <h2>
+          BUILT FOR
+          <span>MOTION.</span>
+        </h2>
+      </div>
+
+      <div class="tech-layout">
+
+        <div class="tech-visual reveal">
+          <div class="tech-circle">
+            <div class="tech-circle-inner">
+              <span>N</span>
+            </div>
+          </div>
+
+          <div class="tech-data data-1">01.4829</div>
+          <div class="tech-data data-2">98.42%</div>
+          <div class="tech-data data-3">∞ ACTIVE</div>
+        </div>
+
+        <div class="tech-list">
+
+          <div class="tech-item reveal">
+            <span>01</span>
             <div>
-                <p class="eyebrow">SECURITY ENGINE v3.0</p>
-
-                <h1>
-                    GERADOR DE
-                    <span>SENHAS</span>
-                </h1>
-
-                <p class="subtitle">
-                    Crie credenciais extremamente fortes diretamente
-                    no seu dispositivo.
-                </p>
+              <h3>ADAPTIVE MOTION</h3>
+              <p>Movimentos suaves que respondem ao scroll e ao cursor.</p>
             </div>
+            <strong>+</strong>
+          </div>
 
-            <div class="security-status">
-                <span class="status-dot"></span>
-                PROCESSAMENTO LOCAL
+          <div class="tech-item reveal">
+            <span>02</span>
+            <div>
+              <h3>DEPTH SYSTEM</h3>
+              <p>Camadas independentes criam uma sensação de profundidade.</p>
             </div>
-        </section>
+            <strong>+</strong>
+          </div>
 
-        <section class="dashboard">
-
-            <!-- PAINEL ESQUERDO -->
-            <div class="panel generator-panel">
-
-                <div class="panel-title">
-                    <div>
-                        <small>GENERATE</small>
-                        <h2>Nova credencial</h2>
-                    </div>
-
-                    <div class="shield">🛡</div>
-                </div>
-
-                <div class="password-box">
-                    <input
-                        id="passwordOutput"
-                        type="text"
-                        readonly
-                        value="Clique em GERAR"
-                    >
-
-                    <button id="copyBtn" class="copy-btn">
-                        COPIAR
-                    </button>
-                </div>
-
-                <div class="strength">
-                    <div class="strength-header">
-                        <span>FORÇA DA SENHA</span>
-                        <strong id="strengthText">—</strong>
-                    </div>
-
-                    <div class="strength-bar">
-                        <div id="strengthFill"></div>
-                    </div>
-
-                    <div class="strength-info">
-                        <span id="entropyText">Entropia: —</span>
-                        <span id="crackText">Resistência: —</span>
-                    </div>
-                </div>
-
-                <div class="mode-selector">
-                    <button class="mode active" data-mode="password">
-                        SENHA
-                    </button>
-
-                    <button class="mode" data-mode="passphrase">
-                        PASSPHRASE
-                    </button>
-
-                    <button class="mode" data-mode="pin">
-                        PIN
-                    </button>
-                </div>
-
-                <div class="control-group" id="lengthGroup">
-
-                    <div class="control-label">
-                        <label>COMPRIMENTO</label>
-                        <span id="lengthValue">20</span>
-                    </div>
-
-                    <input
-                        id="length"
-                        type="range"
-                        min="8"
-                        max="64"
-                        value="20"
-                    >
-                </div>
-
-                <div class="character-options">
-
-                    <label class="option">
-                        <input type="checkbox" id="uppercase" checked>
-                        <span class="check"></span>
-                        <div>
-                            <strong>A-Z</strong>
-                            <small>Maiúsculas</small>
-                        </div>
-                    </label>
-
-                    <label class="option">
-                        <input type="checkbox" id="lowercase" checked>
-                        <span class="check"></span>
-                        <div>
-                            <strong>a-z</strong>
-                            <small>Minúsculas</small>
-                        </div>
-                    </label>
-
-                    <label class="option">
-                        <input type="checkbox" id="numbers" checked>
-                        <span class="check"></span>
-                        <div>
-                            <strong>0-9</strong>
-                            <small>Números</small>
-                        </div>
-                    </label>
-
-                    <label class="option">
-                        <input type="checkbox" id="symbols" checked>
-                        <span class="check"></span>
-                        <div>
-                            <strong>!@#$</strong>
-                            <small>Símbolos</small>
-                        </div>
-                    </label>
-
-                </div>
-
-                <div class="advanced-options">
-
-                    <label class="switch-row">
-                        <span>
-                            <strong>Excluir caracteres ambíguos</strong>
-                            <small>l, 1, I, O, 0 etc.</small>
-                        </span>
-
-                        <input type="checkbox" id="ambiguous">
-                        <span class="switch"></span>
-                    </label>
-
-                    <label class="switch-row">
-                        <span>
-                            <strong>Garantir todos os conjuntos</strong>
-                            <small>Inclui pelo menos 1 de cada tipo</small>
-                        </span>
-
-                        <input type="checkbox" id="guarantee" checked>
-                        <span class="switch"></span>
-                    </label>
-
-                </div>
-
-                <button id="generateBtn" class="generate-btn">
-                    <span>⚡</span>
-                    GERAR SENHA
-                </button>
-
+          <div class="tech-item reveal">
+            <span>03</span>
+            <div>
+              <h3>REAL-TIME UI</h3>
+              <p>Elementos visuais reagem instantaneamente à interação.</p>
             </div>
+            <strong>+</strong>
+          </div>
 
-            <!-- PAINEL 3D -->
-            <div class="panel visual-panel">
-
-                <div class="visual-header">
-                    <div>
-                        <small>LIVE ANALYSIS</small>
-                        <h2>Security Core</h2>
-                    </div>
-
-                    <span id="score">00</span>
-                </div>
-
-                <div id="three-container"></div>
-
-                <div class="stats">
-
-                    <div class="stat">
-                        <span>COMBINAÇÕES</span>
-                        <strong id="combinations">—</strong>
-                    </div>
-
-                    <div class="stat">
-                        <span>ENTROPIA</span>
-                        <strong id="entropy">—</strong>
-                    </div>
-
-                    <div class="stat">
-                        <span>QUALIDADE</span>
-                        <strong id="quality">—</strong>
-                    </div>
-
-                </div>
-
-                <div class="local-security">
-                    <span class="pulse"></span>
-
-                    <div>
-                        <strong>100% CLIENT-SIDE</strong>
-                        <small>
-                            A senha nunca é enviada para um servidor.
-                        </small>
-                    </div>
-                </div>
-
+          <div class="tech-item reveal">
+            <span>04</span>
+            <div>
+              <h3>RESPONSIVE CORE</h3>
+              <p>Uma experiência construída para desktop, tablet e mobile.</p>
             </div>
+            <strong>+</strong>
+          </div>
 
-        </section>
+        </div>
 
-        <section class="tips">
+      </div>
+    </section>
 
-            <div class="tip">
-                <span>01</span>
-                <div>
-                    <strong>Prefira 16+ caracteres</strong>
-                    <p>Senhas maiores oferecem muito mais combinações possíveis.</p>
-                </div>
-            </div>
+    <!-- GALLERY -->
+    <section class="gallery section">
 
-            <div class="tip">
-                <span>02</span>
-                <div>
-                    <strong>Use vários conjuntos</strong>
-                    <p>Combine letras, números e símbolos quando possível.</p>
-                </div>
-            </div>
+      <div class="gallery-header reveal">
+        <span>03 / VISUAL SYSTEM</span>
+        <h2>ANOTHER<br /><i>DIMENSION.</i></h2>
+      </div>
 
-            <div class="tip">
-                <span>03</span>
-                <div>
-                    <strong>Não reutilize senhas</strong>
-                    <p>Use uma credencial diferente para cada serviço.</p>
-                </div>
-            </div>
+      <div class="gallery-grid">
 
-        </section>
+        <div class="gallery-card large reveal">
+          <div class="gallery-glow"></div>
+          <span>01</span>
+          <h3>VOID</h3>
+        </div>
 
-    </main>
+        <div class="gallery-card reveal">
+          <div class="gallery-glow purple"></div>
+          <span>02</span>
+          <h3>NEON</h3>
+        </div>
 
-    <footer>
-        <span>QUANTUM PASS</span>
-        <span>SECURE • LOCAL • RANDOM</span>
-    </footer>
+        <div class="gallery-card reveal">
+          <div class="gallery-glow blue"></div>
+          <span>03</span>
+          <h3>CORE</h3>
+        </div>
 
-    <script src="script.js"></script>
+        <div class="gallery-card wide reveal">
+          <div class="gallery-glow pink"></div>
+          <span>04</span>
+          <h3>INFINITY</h3>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="contact section">
+
+      <div class="contact-content reveal">
+
+        <span class="section-number">04 / CONTACT</span>
+
+        <h2>
+          LET'S BUILD
+          <br />
+          <i>SOMETHING</i>
+          <br />
+          IMPOSSIBLE.
+        </h2>
+
+        <a href="mailto:hello@nexus.digital" class="contact-button magnetic">
+          <span>START A PROJECT</span>
+          <strong>↗</strong>
+        </a>
+
+      </div>
+
+      <div class="contact-orbit"></div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>NEXUS<span>.</span></div>
+    <p>© 2026 — DIGITAL FUTURES</p>
+    <p>DESIGNED BEYOND LIMITS</p>
+  </footer>
+
+  <!-- MUSIC PLAYER -->
+  <div class="music-player">
+
+    <button id="musicButton" class="music-button magnetic" aria-label="Tocar música">
+      <span class="music-icon">♫</span>
+    </button>
+
+    <div class="music-info">
+      <span class="music-label">ATMOSPHERE</span>
+      <strong>NEON DREAMS</strong>
+    </div>
+
+    <div class="music-bars">
+      <i></i>
+      <i></i>
+      <i></i>
+      <i></i>
+      <i></i>
+    </div>
+
+    <audio id="music" loop>
+      <!--
+        Coloque sua música em:
+        assets/music/ambient.mp3
+
+        e mantenha este caminho:
+      -->
+      <source src="assets/music/ambient.mp3" type="audio/mpeg">
+    </audio>
+
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
